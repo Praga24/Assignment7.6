@@ -1,0 +1,29 @@
+1. Write a macro in pig to filter out the people with age >45 from the below given dataset.
+
+DEFINE macr(relvar,colvar) returns res{
+
+$res = filter $relvar by $colvar > 45;
+
+};
+
+a = LOAD '/home/acadgild/olympix_data.csv' USING PigStorage(',') as (name:chararray, age:int, country:chararray, year:chararray,
+close_date:chararray, sport:chararray, gold_medal:int, silver_medal:int, bronze_medal:int, total:int);
+
+x1 = macr(a,age);
+dump x1;
+
+
+2. Find out the number of medals each country won in archery.
+
+rel1 = FILTER a by sport =='Archery';
+grp_country = GROUP rel1 by country;
+medal_count = FOREACH grp_country GENERATE group AS country, SUM(rel1.total) as cnt;
+DUMP medal_count;
+
+
+3. Find out the number of medals india won year wise.
+
+rel2 = FILTER a by country == 'India';
+grp = GROUP rel2 by year;
+medal_cnt = FOREACH grp GENERATE group AS year, SUM(a_filter.total) as total_cnt;
+dump medal_cnt;
